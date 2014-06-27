@@ -6,8 +6,10 @@
   [x]
   (println x "Hello, World!"))
 
-(defn -main []
-  (do
-    (foo "test")))
+(defn -main [& args]
+  (->> args
+    (interpose "")
+    (apply str)
+    (foo)))
 
 ;; (-main)
