@@ -1,5 +1,6 @@
 (ns pinger.core
   (:import (java.net URL HttpURLConnection))
+  (:require [pinger.scheduler :as scheduler])
   (:gen-class))
 
 (defn response-code [address]
@@ -9,11 +10,6 @@
       (-> conn .getInputStream .close))
     code))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
-
 (defn available? [address]
   (= 200 (response-code address)))
 
@@ -21,11 +17,27 @@
 ;; (available? "http://www.google.com")
 ;; (available? "http://www.google.com/badurl")
 
-(defn -main []
+(defn check []
   (let [addresses '("http://www.google.com"
                     "http://www.amazon.com"
                     "http://www.google.com/badurl")]
-    (while true
-      (doseq [address addresses]
-        (println (available? address)))
-      (Thread/sleep (* 1000 60)))))
+    (doseq [address addresses]
+        (println (available? address)))))
+
+(def immediately 0)
+(def every-minute (* 60 1000))
+(def fifteen-second (* 15 1000))
+
+(defn start [e]
+  "REPL helper. Start pinger on executor e."
+  (scheduler/periodically e check
+                          :initial-delay immediately
+                          :delay fifteen-second))
+
+(defn stop [e]
+  "REPL helper. Stop executor e"
+  (scheduler/shutdown-executor e))
+
+(defn -main []
+  (start (scheduler/scheduled-executor 1)))
+
