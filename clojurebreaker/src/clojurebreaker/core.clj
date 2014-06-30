@@ -17,6 +17,11 @@
         f2 (select-keys (frequencies c2) c1)]
     (merge-with min f1 f2)))
 
+(defn score
+  [c1 c2]
+  (let [exact (exact-matches c1 c2)
+        unordered (apply + (vals (unordered-matches c1 c2)))]
+    {:exact exact :unordered (- unordered exact)}))
 
 
 
