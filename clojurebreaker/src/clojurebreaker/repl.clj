@@ -1,6 +1,5 @@
 (ns clojurebreaker.repl
-  (:require [clojurebreaker.core :as core]
-            [clojurebreaker.game :as game]
+  (:require [clojurebreaker.game :as game]
             [clojure.java.io :as io])
   (:use clojure.pprint))
 
