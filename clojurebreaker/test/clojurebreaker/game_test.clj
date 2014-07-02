@@ -2,7 +2,8 @@
   (:use [clojure.test.generative :only (defspec) :as test])
   (:require [clojure.data.generators :as gen]
             [clojurebreaker.game :as game]
-            [clojure.math.combinatorics :as comb]))
+            [clojure.math.combinatorics :as comb]
+            [clojure.test.generative.runner :as runner]))
 
 (defn random-secret
   []
@@ -20,7 +21,7 @@
 
 (defn scoring-is-bounded-by-number-of-pages
   [secret guess score]
-  (< 0 (matches score) (count secret)))
+  (<= 0 (matches score) (count secret)))
 
 (defn reordering-the-guess-does-not-chage-matches
   [secret guess score]
@@ -29,4 +30,15 @@
       (into #{} (map
                 #(matches (game/score secret %))
                 (comb/permutations guess)))))
+
+(defspec score-invariants
+  game/score
+  [^{:tag `random-secret} secret
+   ^{:tag `random-secret} guess]
+  (assert (scoring-is-symmetric secret guess %))
+  (assert (scoring-is-bounded-by-number-of-pages secret guess %))
+  (assert (reordering-the-guess-does-not-chage-matches secret guess %)))
+
+;; (runner/run 2 1000 #'score-invariants)
+;; (ex-data *e)
 
