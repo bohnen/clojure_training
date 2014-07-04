@@ -51,3 +51,19 @@ exit
 exit
 (use 'hiccup.core)
 exit
+(list nil 1)
+(remove nil? [nil 1 2 3])
+(vec [] [])
+(vector [] [])
+(vector nil 1)
+(list (when (false) 1) 2)
+(when (false) 1)
+(when (< 1 1) 1)
+(list (when (< 1 1) 1) 2)
+(require '[cljbreaker.routes.home :as home])
+(home/board)
+(home/board {:one "r" :two "g" :three "b" :four "y" :exact 2 :unordered 1})
+(in-ns 'cljbreaker.routes.home)
+(layout/common (board {:one "r" :two "g" :three "b" :four "y" :exact 2 :unordered 1}))
+(layout/common (board {:one "r" :two "g" :three "b" :four "y" :exact 2}))
+exit
