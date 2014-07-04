@@ -26,11 +26,7 @@
 (defn guess [one two three four])
 
 (defroutes home-routes
-  (GET "/" {:as guesses}
-    (when-not (session/get :game)
-      (session/put! :game (game/create)))
-    (layout/common
-      (board (or guesses nil))))
+  (GET "/" [] (home))
   (POST "/guess" [one two three four]
         (let [result (game/score (session/get :game) [one two three four])]
           (if (= (:exact result) 4)
