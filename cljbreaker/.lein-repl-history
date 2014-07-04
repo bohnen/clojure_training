@@ -15,3 +15,39 @@ exit
 (str (game/create))
 (apply str (game/create))
 exit
+(in-ns 'cljbreaker.routes.home)
+(board)
+exit
+(require '[cljbreaker.routes.home :as home])
+(home/board)
+exit
+(require '[cljbreaker.routes.home :home])
+(require '[cljbreaker.routes.home :as home])
+(home/board)
+(home/board {:one "r" :two "g" :three "b" :four "y"}
+)
+(home/board {:one "r" :two "g" :three "b" :four "y" :exact 2 :unordered 0}
+)
+(home/board {:one "r" :two "g" :three "b" :four "y" :exact 2 :unordered 1}
+)
+(and 1 0)
+(and nil nil)
+(and nil 1)
+(and 1 2)
+(doc when)
+(true? (and 1 2 ))
+(true? (and 1 1 ))
+(true? (and 1 0 ))
+(doc and)
+(true? 1)
+(doc true?)
+(doc ifn?)
+(if (and 1 0) "true" "false")
+(if (and 1 nil) "true" "false")
+(if (and 1 0) "true" "false")
+(when (and 1 0) "true")
+(home/board {:one "r" :two "g" :three "b" :four "y" :exact 2 :unordered 1})
+(require 'noir.core)
+exit
+(use 'hiccup.core)
+exit
