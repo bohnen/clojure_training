@@ -23,12 +23,8 @@
     (board nil)))
 ;;    [:p "Welcome to clojurebreaker. Your current game solution is " (session/get :game)]))
 
-(defn guess [one two three four])
-
-(defroutes home-routes
-  (GET "/" [] (home))
-  (POST "/guess" [one two three four]
-        (let [result (game/score (session/get :game) [one two three four])]
+(defn guess [one two three four]
+  (let [result (game/score (session/get :game) [one two three four])]
           (if (= (:exact result) 4)
             (do (session/remove! :game)
                 (layout/common
@@ -42,4 +38,9 @@
                          :three three
                          :four four
                          :exact (:exact result)
-                         :unordered (:unordered result)})))))))
+                         :unordered (:unordered result)}))))))
+
+(defroutes home-routes
+  (GET "/" [] (home))
+  (POST "/guess" [one two three four]
+        (guess one two three four)))
