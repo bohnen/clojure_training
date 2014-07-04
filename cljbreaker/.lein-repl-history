@@ -1,0 +1,17 @@
+(require '[cljbreaker.models.game :as game])
+(doc dotimes)
+(dotimes [_ 5] (game/create))
+(dotimes [_ 5] (println (game/create))
+)
+(doc rand-nth)
+exit
+(require '[cljbreaker.models.game :as game])
+(dotimes [_ 5] (game/create))
+(dotimes [_ 5] (println (game/create))
+)
+(game/create)
+exit
+(require '[cljbreaker.models.game :as game])
+(str (game/create))
+(apply str (game/create))
+exit
