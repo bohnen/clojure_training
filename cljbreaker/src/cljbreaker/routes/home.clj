@@ -1,8 +1,17 @@
 (ns cljbreaker.routes.home
+  (:use [hiccup.form])
   (:require [compojure.core :refer :all]
             [cljbreaker.views.layout :as layout]
             [noir.session :as session]
             [cljbreaker.models.game :as game]))
+
+(defn board []
+  (form-to [:post "/guess"]
+           (text-field "one")
+           (text-field "two")
+           (text-field "three")
+           (text-field "four")
+           (submit-button "Guess")))
 
 (defn home []
   (when-not (session/get :game)
