@@ -1,0 +1,105 @@
+07-05 12:44:16 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: テーブル "LINKS" が見つかりません
+Table "LINKS" not found; SQL statement:
+INSERT INTO "LINKS" ("URL") VALUES (?) [42102-178]
+07-05 12:44:16 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: テーブル "LINKS" が見つかりません
+Table "LINKS" not found; SQL statement:
+INSERT INTO "LINKS" ("URL") VALUES (?) [42102-178]
+07-05 12:44:16 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: テーブル "LINKS" が見つかりません
+Table "LINKS" not found; SQL statement:
+INSERT INTO "LINKS" ("URL") VALUES (?) [42102-178]
+07-05 12:52:33 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: テーブル "LINKS" が見つかりません
+Table "LINKS" not found; SQL statement:
+DROP TABLE links [42102-178]
+07-05 12:52:33 jdbc[3]: exception
+org.h2.jdbc.JdbcBatchUpdateException: テーブル "LINKS" が見つかりません
+Table "LINKS" not found; SQL statement:
+DROP TABLE links [42102-178]
+	at org.h2.jdbc.JdbcStatement.executeBatch(JdbcStatement.java:678)
+	at clojure.java.jdbc$execute_batch.invoke(jdbc.clj:370)
+	at clojure.java.jdbc$db_do_commands$fn__13259.invoke(jdbc.clj:633)
+	at clojure.java.jdbc$db_transaction_STAR_.doInvoke(jdbc.clj:546)
+	at clojure.lang.RestFn.invoke(RestFn.java:425)
+	at clojure.java.jdbc$db_do_commands.doInvoke(jdbc.clj:632)
+	at clojure.lang.RestFn.applyTo(RestFn.java:142)
+	at clojure.core$apply.invoke(core.clj:628)
+	at clojure.java.jdbc$db_do_commands.doInvoke(jdbc.clj:639)
+	at clojure.lang.RestFn.applyTo(RestFn.java:142)
+	at clojure.core$apply.invoke(core.clj:630)
+	at clojure.java.jdbc$db_do_commands.doInvoke(jdbc.clj:626)
+	at clojure.lang.RestFn.invoke(RestFn.java:442)
+	at web.db.schema$drop_tables.invoke(schema.clj:56)
+	at web.db.schema$eval13388.invoke(form-init8759774231498596716.clj:1)
+	at clojure.lang.Compiler.eval(Compiler.java:6703)
+	at clojure.lang.Compiler.eval(Compiler.java:6666)
+	at clojure.core$eval.invoke(core.clj:2927)
+	at clojure.main$repl$read_eval_print__6625$fn__6628.invoke(main.clj:239)
+	at clojure.main$repl$read_eval_print__6625.invoke(main.clj:239)
+	at clojure.main$repl$fn__6634.invoke(main.clj:257)
+	at clojure.main$repl.doInvoke(main.clj:257)
+	at clojure.lang.RestFn.invoke(RestFn.java:1096)
+	at clojure.tools.nrepl.middleware.interruptible_eval$evaluate$fn__8497.invoke(interruptible_eval.clj:56)
+	at clojure.lang.AFn.applyToHelper(AFn.java:152)
+	at clojure.lang.AFn.applyTo(AFn.java:144)
+	at clojure.core$apply.invoke(core.clj:624)
+	at clojure.core$with_bindings_STAR_.doInvoke(core.clj:1862)
+	at clojure.lang.RestFn.invoke(RestFn.java:425)
+	at clojure.tools.nrepl.middleware.interruptible_eval$evaluate.invoke(interruptible_eval.clj:41)
+	at clojure.tools.nrepl.middleware.interruptible_eval$interruptible_eval$fn__8538$fn__8541.invoke(interruptible_eval.clj:171)
+	at clojure.core$comp$fn__4192.invoke(core.clj:2402)
+	at clojure.tools.nrepl.middleware.interruptible_eval$run_next$fn__8531.invoke(interruptible_eval.clj:138)
+	at clojure.lang.AFn.run(AFn.java:22)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+org.h2.jdbc.JdbcSQLException: テーブル "LINKS" が見つかりません
+Table "LINKS" not found; SQL statement:
+DROP TABLE links [42102-178]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:344)
+	at org.h2.message.DbException.get(DbException.java:178)
+	at org.h2.message.DbException.get(DbException.java:154)
+	at org.h2.command.ddl.DropTable.prepareDrop(DropTable.java:70)
+	at org.h2.command.ddl.DropTable.update(DropTable.java:114)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:79)
+	at org.h2.command.Command.executeUpdate(Command.java:254)
+	at org.h2.jdbc.JdbcStatement.executeUpdateInternal(JdbcStatement.java:132)
+	at org.h2.jdbc.JdbcStatement.executeBatch(JdbcStatement.java:663)
+	at clojure.java.jdbc$execute_batch.invoke(jdbc.clj:370)
+	at clojure.java.jdbc$db_do_commands$fn__13259.invoke(jdbc.clj:633)
+	at clojure.java.jdbc$db_transaction_STAR_.doInvoke(jdbc.clj:546)
+	at clojure.lang.RestFn.invoke(RestFn.java:425)
+	at clojure.java.jdbc$db_do_commands.doInvoke(jdbc.clj:632)
+	at clojure.lang.RestFn.applyTo(RestFn.java:142)
+	at clojure.core$apply.invoke(core.clj:628)
+	at clojure.java.jdbc$db_do_commands.doInvoke(jdbc.clj:639)
+	at clojure.lang.RestFn.applyTo(RestFn.java:142)
+	at clojure.core$apply.invoke(core.clj:630)
+	at clojure.java.jdbc$db_do_commands.doInvoke(jdbc.clj:626)
+	at clojure.lang.RestFn.invoke(RestFn.java:442)
+	at web.db.schema$drop_tables.invoke(schema.clj:56)
+	at web.db.schema$eval13388.invoke(form-init8759774231498596716.clj:1)
+	at clojure.lang.Compiler.eval(Compiler.java:6703)
+	at clojure.lang.Compiler.eval(Compiler.java:6666)
+	at clojure.core$eval.invoke(core.clj:2927)
+	at clojure.main$repl$read_eval_print__6625$fn__6628.invoke(main.clj:239)
+	at clojure.main$repl$read_eval_print__6625.invoke(main.clj:239)
+	at clojure.main$repl$fn__6634.invoke(main.clj:257)
+	at clojure.main$repl.doInvoke(main.clj:257)
+	at clojure.lang.RestFn.invoke(RestFn.java:1096)
+	at clojure.tools.nrepl.middleware.interruptible_eval$evaluate$fn__8497.invoke(interruptible_eval.clj:56)
+	at clojure.lang.AFn.applyToHelper(AFn.java:152)
+	at clojure.lang.AFn.applyTo(AFn.java:144)
+	at clojure.core$apply.invoke(core.clj:624)
+	at clojure.core$with_bindings_STAR_.doInvoke(core.clj:1862)
+	at clojure.lang.RestFn.invoke(RestFn.java:425)
+	at clojure.tools.nrepl.middleware.interruptible_eval$evaluate.invoke(interruptible_eval.clj:41)
+	at clojure.tools.nrepl.middleware.interruptible_eval$interruptible_eval$fn__8538$fn__8541.invoke(interruptible_eval.clj:171)
+	at clojure.core$comp$fn__4192.invoke(core.clj:2402)
+	at clojure.tools.nrepl.middleware.interruptible_eval$run_next$fn__8531.invoke(interruptible_eval.clj:138)
+	at clojure.lang.AFn.run(AFn.java:22)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
