@@ -32,3 +32,20 @@
 ;; #(into () %)
 ;; #(reduce conj () %)
 
+;; #22 sum of list
+;; (reduce + '(1 2 3))
+;; (apply + '(1 2 3))
+
+
+;; #22 Write a function which returns the total number of elements in a sequence.
+(defn mycount [coll]
+  (reduce (fn [x y] (+ x 1)) 0 coll))
+
+;; #(reduce (fn [x _] (+ 1 x)) 0 %)
+
+;; #21 Write a function which returns the Nth element from a sequence.
+(fn [coll n]
+  (if (zero? n) (first coll) (recur (rest coll) (dec n))))
+
+;; #(first (drop %2 %))
+;; #((vec %1) %2)  ;; これはvectorが数値を引数として [i] を返す特性を利用したもの! すごい。
