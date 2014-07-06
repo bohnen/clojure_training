@@ -49,3 +49,15 @@
 
 ;; #(first (drop %2 %))
 ;; #((vec %1) %2)  ;; これはvectorが数値を引数として [i] を返す特性を利用したもの! すごい。
+
+;; #26 fibonatti sequence
+(fn [n]
+  (loop [i 1 j 1 c [] n n]
+    (if (zero? n) c (recur j (+ i j) (conj c i) (dec n)))))
+
+;; lazy-sequenceをうまく使った例。これだと必要なシーケンスしか計算しない
+;; (fn fibb [n] (take n (map first (iterate (fn [[l r]] [r (+ l r)]) [1 1]))))
+;; (fn [i] (take i '(1 1 2 3 5 8 13 21))) ;; これはひどい
+
+
+
