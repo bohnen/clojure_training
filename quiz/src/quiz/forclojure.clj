@@ -99,3 +99,18 @@
 ;;               (_flatten (first items))
 ;;               (list (first items)))
 ;;             (_flatten (rest items)))))
+
+;; #134
+;; #(and (contains? %2 %1) (nil? (%2 %1)))
+
+;; #(not (%2 % 1)) ; ({:a nil :b "a"} :a 1 ) とすることで、:a が無いときのデフォルトを1 にすることができる
+;; notは false/nil の時true, それ以外はfalseになる。
+
+;; #156 Map defaults
+(fn [x coll] (reduce #(assoc %1 %2 x) {} coll))
+
+;; #(into {} (map vector %2 (repeat %))) ;; into を利用して作成
+;; #(zipmap %2 (repeat %1)) ;; zipmap 関数を使う。zipmapは便利だな。
+;; repeatなどの遅延コレクションを使うことで 合成系関数が使える。全部を初期化したいときなどに便利。たとえば二次元配列とか。
+
+
