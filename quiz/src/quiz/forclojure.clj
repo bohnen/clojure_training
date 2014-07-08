@@ -113,4 +113,12 @@
 ;; #(zipmap %2 (repeat %1)) ;; zipmap 関数を使う。zipmapは便利だな。
 ;; repeatなどの遅延コレクションを使うことで 合成系関数が使える。全部を初期化したいときなどに便利。たとえば二次元配列とか。
 
+;; #27 Palindrome detector
+(fn [coll]
+  (every? #(apply = %) (map vector coll (reverse coll))))
+
+;; #(= (reverse %) (seq %)) ; そりゃそうだ。コレクションへの変換 (seq, vec) などを活用したいところ。
+
+
+
 
