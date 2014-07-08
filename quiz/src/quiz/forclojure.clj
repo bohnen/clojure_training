@@ -120,5 +120,10 @@
 ;; #(= (reverse %) (seq %)) ; そりゃそうだ。コレクションへの変換 (seq, vec) などを活用したいところ。
 
 
+;; #32 Write a function which duplicates each element of a sequence
+(fn [col]
+ (reduce #(conj %1 %2 %2) [] col))
 
+;; #(interleave % %) ; なるほど
+;; mapcat #(list % %)
 
