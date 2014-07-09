@@ -1,8 +1,11 @@
 (ns quil-training.first
-  (:use [quil.core]))
+  (:use [overtone.core])
+  (:require [quil.core :as q]))
 
-(sketch
+(q/sketch
   :setup (fn []
-          (background 20)
-          (ellipse 50 50 80 80))
+          (q/background 20)
+          (q/ellipse 50 50 80 80)
+          (connect-external-server 57110)
+          (demo (sin-osc)))
   :title "The moon delights the night")
