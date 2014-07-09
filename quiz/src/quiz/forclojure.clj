@@ -131,3 +131,13 @@
 
 ;; #(apply hash-map (interleave % %2))
 ;; #(into {} (map vector % %2)) ; map にintoできるのは、([a b][c d])
+
+;; #66 Greatest common divisor
+
+(fn [x y]
+  (last (filter #(and (zero? (mod x %)) (zero? (mod y %))) (range 1 (inc (min x y))))))
+
+;; (fn gcd [x y]
+;;   (if (= y 0)
+;;     x
+;;     (gcd y (rem x y))))  ;; ユークリッドの互除法
