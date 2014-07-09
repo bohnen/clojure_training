@@ -127,3 +127,7 @@
 ;; #(interleave % %) ; なるほど
 ;; mapcat #(list % %)
 
+;; #61 map collection コレクションからマップを作成
+
+;; #(apply hash-map (interleave % %2))
+;; #(into {} (map vector % %2)) ; map にintoできるのは、([a b][c d])
