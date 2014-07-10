@@ -141,3 +141,40 @@
 ;;   (if (= y 0)
 ;;     x
 ;;     (gcd y (rem x y))))  ;; ユークリッドの互除法
+
+;; #81 Set Intersection
+
+#(set (remove nil? (map % %2)))
+;; (comp set filter) ; #{...} は関数として使えるので、setに存在するものだけを返すのは filterでできる。そこにsetを合成するという技。
+
+;; #62 re-implement iterate
+(fn t [f i]
+  (cons i (lazy-seq (t f (f i)))))
+
+;; #(reductions (fn [i _] (%1 i)) (repeat %2)) ; reductionを使えば繰り返し関数を適用することができる
+
+;; #107 Simple closures0
+
+#(fn [x] (int (Math/pow x %)))
+
+;; (fn [n] #(Math/pow % n)) ; 関数を返す関数リテラルよりも、関数リテラルを返す関数の方がコードは少ない
+;; partial #(Math/pow %2 %1) ; partialを使うことで、変数束縛した関数を返すことができる
+
+;; #99 Product Digits  (= (__ 99 9) [8 9 1])
+#(loop [ret '() n (* % %2)]
+   (if (= n 0)
+     (vec ret)
+     (recur (cons (mod n 10) ret) (quot n 10))))
+
+;; (comp (partial map #(- (int %) 48)) str *)  計算結果を文字列にして、それぞれの文字をintにする。
+;; int関数だと文字のASCIIコードがかえるため、それを (- (int %) 48) で調整している。
+
+;; #63 Group a sequence group-byのような関数を作れ
+(defn myg [f c]
+  (->> (map vector (map f c) c)
+       (reduce (fn [m [k v]] (assoc m k (conj (m k []) v))) {})))
+
+;; (fn [f s]
+;;   (apply merge-with concat (map #(hash-map (f %) [%]) s)))
+
+;; #(reduce (fn [m v] (assoc m (% v) (conj (m (% v) []) v))) {} %2)
