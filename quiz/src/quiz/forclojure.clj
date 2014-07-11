@@ -205,3 +205,13 @@
 ;; #(read-string (str 2 \r %))
 ;; reduce #(+ %1 %1 (- (int %2) 48)) 0
 ;; #(Integer/parseInt % 2)
+
+;; #88 symmetric difference
+(defn mydiff [l r]
+  (into (filter #(not (l %)) r) (filter #(not (r %)) l))) ; これだと結果がlistなので、setしないといけない
+
+(defn mydiff [l r]
+  (reduce #(if (not (% %2)) (conj % %2) (disj % %2)) l r))
+
+;; #(set (concat (apply disj %1 %2) (apply disj %2 %1))) ; (apply disj %1 %2) で、differenceと同じことをやっている!
+;; applyが複数引数をとるときは、それがそのまま残る (apply f #{1 2 3} #{4 5 6}) -> (f #{1 2 3} 4 5 6)
