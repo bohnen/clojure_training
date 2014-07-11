@@ -176,5 +176,32 @@
 
 ;; (fn [f s]
 ;;   (apply merge-with concat (map #(hash-map (f %) [%]) s)))
-
 ;; #(reduce (fn [m v] (assoc m (% v) (conj (m (% v) []) v))) {} %2)
+
+
+;; #122 Read a binary number
+;; まずは実直に
+(defn bin [coll]
+  (let [ordered (map #(- (int %) 48) (reverse coll))]
+    (loop [sum 0 col ordered base 1]
+      (println sum base col)
+      (if (empty? col)
+        sum
+        (recur (+ sum (* base (first col))) (rest col) (* base 2))
+        ))))
+
+;; code golf狙い
+(defn bin [c]
+  (reduce + (map-indexed #(* (Math/pow 2 %1) (- (int %2) 48)) (reverse c))))
+
+;; もっと
+(defn bin [c]
+  (->> (reverse c)
+       (map-indexed #(* (Math/pow 2 %1) (- (int %2) 48)))
+       (reduce +)
+       (int)))
+
+;; 回答
+;; #(read-string (str 2 \r %))
+;; reduce #(+ %1 %1 (- (int %2) 48)) 0
+;; #(Integer/parseInt % 2)
