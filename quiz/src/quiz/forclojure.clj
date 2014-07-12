@@ -215,3 +215,35 @@
 
 ;; #(set (concat (apply disj %1 %2) (apply disj %2 %1))) ; (apply disj %1 %2) で、differenceと同じことをやっている!
 ;; applyが複数引数をとるときは、それがそのまま残る (apply f #{1 2 3} #{4 5 6}) -> (f #{1 2 3} 4 5 6)
+
+
+;; #135 infix notation
+
+(defn infix [l & r]
+  (println l ":" r)
+  (if (next r)
+    ((first r) l (apply infix (rest r)))
+    l))
+
+;; 上だと「ちゃんとした」中間置法になってしまう。
+
+(defn infix [x & col]
+  (reduce (fn [v [o a]] (o v a)) x (partition 2 col)))
+
+;; #97 パスカルの三角形
+(defn pascal [x]
+  (->
+   (fn c [i n]
+     (if (or (= i 0) (= i (dec n)))
+       1
+       (+ (c (dec i) (dec n)) (c i (dec n)))))
+   (map-indexed (repeat x x))
+   (vec)))
+
+
+;; (fn [n]
+;;   (nth
+;;     (iterate #(map +' (concat [0] %) (concat % [0])) [1])
+;;    (dec n)
+
+;;    )) ; これはすごい。頭良い。
