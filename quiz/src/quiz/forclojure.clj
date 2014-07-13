@@ -247,3 +247,15 @@
 ;;    (dec n)
 
 ;;    )) ; これはすごい。頭良い。
+
+;; #157 indexing sequences
+(defn idx [coll]
+  (map #(list % %2) coll (range)))
+
+;; もしくは
+(fn [c]
+  (map-indexed #(list %2 %) c))
+
+;; map-indexed #(vector %2 %1) ; ほぼ同じ。確かに。
+;; #(map vector % (range)) ; 確かにこれでいい。
+
