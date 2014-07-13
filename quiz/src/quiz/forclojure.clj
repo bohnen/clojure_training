@@ -259,3 +259,35 @@
 ;; map-indexed #(vector %2 %1) ; ほぼ同じ。確かに。
 ;; #(map vector % (range)) ; 確かにこれでいい。
 
+;; #118 Re-implement map
+(defn m [f c]
+  (if (empty? c)
+    c
+    (cons (f (first c)) (lazy-seq (m f (rest c))))))
+
+;; (fn [f x] (rest (reductions #(f %2) nil x))) ; あーなるほど。
+
+;; #120 sum of square
+
+(defn filt [i]
+  (->> (map #(Math/pow (- (int %) 48) 2) (str i))
+       (apply +)
+       (< i)))
+
+
+(fn [c]
+  (->
+   (fn [i]
+     (->> (map #(Math/pow (- (int %) 48) 2) (str i))
+          (apply +)
+          (< i)))
+   (filter c)
+   (count)))
+
+;; (fn [xs]
+;;   (count
+;;     (filter
+;;       (fn [x] (< x (reduce + (map #(* % %) (map (comp read-string str) (str x))))))
+;;       xs)))
+
+;; 桁毎にばらすのは (map (comp read-string str) (str x)) イディオムにしてもいいかも
