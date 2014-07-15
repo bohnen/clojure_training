@@ -291,3 +291,81 @@
 ;;       xs)))
 
 ;; 桁毎にばらすのは (map (comp read-string str) (str x)) イディオムにしてもいいかも
+
+;; #95 to Tree, or not to tree
+
+(defn node? [c]
+  (try
+    (if (nil? c)
+      true
+      (and (node? (first (rest c))) (node? (second (rest c)))))
+    (catch Exception e false)))
+
+;; catchは使ってはいけない!
+(defn node? [c]
+  (if (nil? c)
+    true
+    (if (and (sequential? c) (= (count c) 3))
+      (and (node? (first (rest c))) (node? (second (rest c))))
+      false)))
+
+;; 同じような回答
+(fn tree? [x]
+   (or
+     (nil? x)
+     (and
+       (sequential? x)
+       (= 3 (count x))
+       (not (sequential? (first x)))
+       (tree? (second x))
+       (tree? (nth x 2))
+       )))
+
+;; letfn を使う例
+(letfn [(binary-tree?  [t]
+            (and (= (count t) 3)
+                 (every? node? (rest t))))
+          (node? [x]
+            (or (nil? x)
+                (and (coll? x)
+                     (binary-tree? x))))]
+    binary-tree?)
+
+;; #128 recognize playing cards
+
+(defn card [s]
+  (let [cards (merge {\D :diamond \H :heart \C :club \S :spade \A 12 \K 11 \Q 10 \J 9 \T 8} (zipmap (map char (range 50 58)) (range)))]
+    (apply #(hash-map :suit (cards %) :rank (cards %2)) s)))
+
+;; 圧縮
+;; #(let [cards (merge {\D :diamond \H :heart \C :club \S :spade \A 12 \K 11 \Q 10 \J 9 \T 8} (zipmap (map char (range 50 58)) (range)))]
+;;     (apply (fn [l r] {:suit (cards l) :rank (cards r)}) %))
+
+;; (#(fn [[a b]]
+;;   {:suit (% a) :rank (if (% b) (% b) (- (int b) 50))}
+;;   )
+;; (zipmap "DHCTJQKA" [:diamond :heart :club 8 9 10 11 12]))
+;; 2文字固定ならapply使わなくても引数で分割できるし、数値の部分はこのようにelse部分に書いてもよい
+
+;; (fn [lp]
+;;   (let [suit (condp = (first lp)
+;;                \S :spade
+;;                \H :heart
+;;                \D :diamond
+;;                \C :club)
+;;         rank (condp = (second lp)
+;;                \2 0
+;;                \3 1
+;;                \4 2
+;;                \5 3
+;;                \6 4
+;;                \7 5
+;;                \8 6
+;;                \9 7
+;;                \T 8
+;;                \J 9
+;;                \Q 10
+;;                \K 11
+;;                \A 12)]
+;;     {:suit suit :rank rank}))
+;; condp の利用例。condp はpredと値をとって、case文を実現する
