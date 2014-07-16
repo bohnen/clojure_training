@@ -369,3 +369,44 @@
 ;;                \A 12)]
 ;;     {:suit suit :rank rank}))
 ;; condp の利用例。condp はpredと値をとって、case文を実現する
+
+;; # 96 Beauty of Symmetry
+(defn sym [a b]
+  (println a ":" b)
+  (or
+   (= a b nil)
+   (and
+    (sequential? a)
+    (sequential? b)
+    (sym (nth a 1) (nth b 2))
+    (sym (nth a 2) (nth b 1)))
+   false
+  ))
+
+;; (fn [[_ l r]]
+;;     (letfn [(mirror [t]
+;;               (when-let [[v l r] t]
+;;                 [v (mirror r) (mirror l)]))]
+;;       (= l (mirror r))))
+;; ミラー関数を作成するやりかた。 (= [...] '(...)) を使っている
+
+;; #100 Least Common Multiple
+(defn lcm [& args]
+  (letfn [(gcd [x y] (if (= 0 y) x (gcd y (rem x y))))]
+    (let [nums (map #(if (ratio? %) (numerator %) %) args)
+          divs (map #(if (ratio? %) (denominator %) 1) args)
+          n (reduce gcd nums)
+          d (reduce gcd divs)]
+      (/ (reduce #(* % (/ %2 n)) 1 nums) d)
+      )))
+
+
+(fn [n & nums]
+    (first
+      (filter
+        (fn [m] (every? #(zero? (rem m %)) nums))
+        (iterate #(+ % n) n))))
+
+(fn [& xs]
+  (/ (apply * xs)
+    (reduce #(if (zero? %2) % (recur %2 (mod % %2))) xs)))
