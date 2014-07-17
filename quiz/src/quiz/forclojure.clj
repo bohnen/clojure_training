@@ -410,3 +410,18 @@
 (fn [& xs]
   (/ (apply * xs)
     (reduce #(if (zero? %2) % (recur %2 (mod % %2))) xs)))
+
+;; #147 Pascal's Trapezoid
+;; (fn [n]
+;;   (nth
+;;     (iterate #(map +' (concat [0] %) (concat % [0])) [1])
+;;    (dec n) ; 参考
+(defn trapezoid [c]
+  (iterate #(vec (map +' (concat [0] %) (concat % [0]))) c))
+
+(partial iterate
+           (fn [nums]
+             (vec
+               (map +' (conj nums 0) (cons 0 nums)))))
+
+;; なかなか短い
