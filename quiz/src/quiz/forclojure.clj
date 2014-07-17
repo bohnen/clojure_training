@@ -425,3 +425,33 @@
                (map +' (conj nums 0) (cons 0 nums)))))
 
 ;; なかなか短い
+
+;; #146 Tree into Tables
+(defn flatmap [m]
+  (letfn [(mkmap [c k v]
+                 (if (map? v)
+                   (reduce-kv #(assoc % (vector k %2) %3) c v)
+                   (assoc c k v)))]
+    (reduce-kv mkmap {} m)))
+
+;; 短いバージョン
+(defn fltmap [m]
+  (reduce-kv
+   (fn [c k v]
+     (reduce-kv #(assoc % (vector k %2) %3) c v))
+   {} m))
+
+;; (fn [x] (into {} (for [[k v] x [vk vv] v] [[k vk] vv])))
+;; forを使ってmapを捜査する。[k v] x が元のMap (Level1), [vk vv] vがvの中身（Level2)
+
+;; #153 Pairwise Disjoint Sets
+(defn pdisj [s]
+  (let [elem (reduce #(+ % (count %2)) 0 s)
+        merged (count (reduce into s))]
+    (= elem merged)))
+
+;; golf用
+(fn [s]
+  (= (reduce #(+ % (count %2)) 0 s) (count (reduce into s))))
+
+;; #(apply distinct? (apply concat %))
