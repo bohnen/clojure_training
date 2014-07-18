@@ -455,3 +455,17 @@
   (= (reduce #(+ % (count %2)) 0 s) (count (reduce into s))))
 
 ;; #(apply distinct? (apply concat %))
+
+
+;; 44 rotate sequecne
+(defn rotate [n c]
+  (let [l (count c)]
+    (cond (= n 0) c
+          (> n 0) (recur (rem (- n l) l) c)
+          (< n 0) (recur (inc n) (cons (last c) (butlast c))))))
+
+;; modは負数に対しても使える
+#(let [n (mod % (count %2))]
+         (concat (drop n %2)
+                 (take n %2)
+                 ))
