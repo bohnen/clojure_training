@@ -469,3 +469,34 @@
          (concat (drop n %2)
                  (take n %2)
                  ))
+
+;; #43 reverse interleave
+(defn revint [c n]
+  (->> (partition n c)
+       (apply interleave)
+       (partition (/ (count c) n))))
+
+;; #(apply (partial map list) (partition %2 %1)) ;; (partial map list) で、 (a b) (c d) (e f) -> (a c e) (b d f)
+
+;; #55 Count Occurances
+(defn freq [c]
+  (reduce #(assoc % %2 (inc (% %2 0))) c))
+
+;; #56 Find distinct items
+(defn d [c]
+  (if-not (empty? c)
+    (let [a (first c)]
+      (cons a (d (remove #(= a %) (rest c)))))))
+
+;; reduce (fn [s e]
+;;   (if (some #(= % e) s)
+;;     s
+;;     (conj s e)))
+;; []
+
+;; reduceを使ってdistinctを実現するうまいやり方。ベクタ中に既に要素があればそのまま、なければconj.
+;; ちなみにcontains? はベクタに対してはインデックスがあるかないかを調べるため使えない。
+
+(defn dis [c]
+  (reduce (fn [s e]
+            (if (some #(= % e) s) s (conj s e))) [] c))
