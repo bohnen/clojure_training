@@ -500,3 +500,22 @@
 (defn dis [c]
   (reduce (fn [s e]
             (if (some #(= % e) s) s (conj s e))) [] c))
+
+;; #58 Function Composition
+(defn c [f & fs]
+  (println f)
+  (if (empty? fs) (fn [& a] (apply f a)) (fn [& a] (f (apply (apply c fs) a)))))
+;; 長い!!
+
+(defn mycomp [& fs]
+  (fn [& args]
+    (reduce #(%2 %) (apply (last fs) args) (rest (reverse fs)))))
+
+(fn [& x] (reduce (fn [f g] (fn [& a] (f (apply g a)))) x))
+
+;; #59 Juxtaposition 併記
+(defn myjuxt [& fs]
+  (fn [& args]
+    (reduce #(conj % (apply %2 args)) [] fs)))
+
+;; (fn [& x] (fn [& a] (map #(apply % a) x))) ; 別にReduceする必要はない。関数の数と一緒だから。
