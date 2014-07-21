@@ -519,3 +519,13 @@
     (reduce #(conj % (apply %2 args)) [] fs)))
 
 ;; (fn [& x] (fn [& a] (map #(apply % a) x))) ; 別にReduceする必要はない。関数の数と一緒だから。
+
+;; #54 Partition a sequence
+(fn [n c]
+  (filter #(= n (count %)) (vals (group-by #(quot % n) c))))
+
+;; まともな解法
+(fn f [n v]
+  (if (>= (count v) n)
+    (cons (take n v) (f n (drop n v)))))
+
