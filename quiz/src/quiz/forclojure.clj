@@ -581,3 +581,20 @@
   (filter (fn [x] (every? #(< 0 (mod x %)) (range 2 x))))
   (take n)))
 
+
+;; #74 Filter Perfect Squares
+
+(defn filsqr [s]
+  (->> (re-seq #"\d+" s)
+       (map #(Integer/valueOf %))
+       (filter (fn [x]
+                 ((set (map #(* % %) (range (inc x)))) x)))
+       (interpose \,)
+       (apply str)))
+
+(fn [strs]
+  (apply str
+    (interpose ","
+      (filter
+        #(= 0.0 (mod (Math/sqrt %) 1))
+        (map #(Integer/parseInt %) (.split strs ",")))))) ; Javaの関数をうまく利用
