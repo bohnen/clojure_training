@@ -529,3 +529,55 @@
   (if (>= (count v) n)
     (cons (take n v) (f n (drop n v)))))
 
+;; #70 Word Sorting
+
+(fn [c]
+	(sort #(compare (.toLowerCase %) (.toLowerCase %2)) (re-seq #"\w+" c)))
+
+#(sort-by (fn [v](.toLowerCase v))  (re-seq #"\w+" %))
+
+;; #67 Prime Numbers
+;; (defn prime [ps ds]
+;;   (println ps ":" ds)
+;;   (lazy-seq
+;;    (let [x (first ds)]
+;;      (println class x ":" x)
+;;      (if (some #(= 0 (/ x %)) ps)
+;;        (prime ps (rest ds))
+;;        (cons x (prime (conj ps x) (rest ds)))
+;;        ))))
+
+;; これ動かない。なんでだろ? (NullPointerException)
+;; (defn prime [ps ds]
+;; ;;   (println ps ":" ds)
+;;   (when-let [x (first ds)]
+;;     (lazy-seq
+;;      (if (some #(= 0 (mod x %)) ps)
+;;        (prime ps (rest ds))
+;;        (cons x (prime (conj ps x) (rest ds)))
+;;        ))))
+
+;; lazy-seq は seqが呼ばれた時に評価される。この場合は (take 1 (prime [1] (drop 2 (range 10)))) のように呼び出していただめ、
+;; 最初の要素が出るまでprimeを再帰的に呼び出してしまっていた
+;; trace-form で発見できる
+;; (take 1 (prime [2] (drop 2 (range 10)))) ならOKだが、これだと 出力は 3 になり、まちがい。
+
+(defn prime [n]
+  (take n (cons 2
+        (lazy-seq
+         (letfn [(prime [ps ds]
+                        (when-let [x (first ds)]
+                          (if (some #(= 0 (mod x %)) ps)
+                            (recur ps (rest ds))
+                            (lazy-seq (cons x (prime (conj ps x) (rest ds)))))))]
+           (prime [2] (drop 3 (range))))
+         ))))
+
+;; コードゴルフ 短くなくてもいいなら、n-1 までの自然数で割れば良い
+(fn [n]
+  (->>
+  (range)
+  (drop 2)
+  (filter (fn [x] (every? #(< 0 (mod x %)) (range 2 x))))
+  (take n)))
+
