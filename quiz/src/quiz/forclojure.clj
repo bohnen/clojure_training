@@ -598,3 +598,28 @@
       (filter
         #(= 0.0 (mod (Math/sqrt %) 1))
         (map #(Integer/parseInt %) (.split strs ",")))))) ; Javaの関数をうまく利用
+
+;; #65 Black box testing
+(defn mytype [s]
+  (let [x [:x 2]
+        l (conj (conj (conj s [:x 1]) x) x)
+        i (count s)
+        j (count l)]
+    (cond
+     (= j (inc i)) :map
+     (= j (+ 2 i)) :set
+     (= x (first l)) :list
+     true :vector)))
+
+;; これは結構いいアイディアだと思ったんだが
+
+;; #({{} :map #{} :set} (empty %) (if (reversible? %) :vector :list))
+;; emptyは同一カテゴリの空を返す () = [] なので、reversible で判定している。リストはreversibleではない
+
+;; #(condp = (nth (str %) 0)
+;;    \{ :map
+;;    \c :list
+;;    \[ :vector
+;;    \# :set)
+
+;; インチキだ
