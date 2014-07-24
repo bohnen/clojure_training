@@ -623,3 +623,53 @@
 ;;    \# :set)
 
 ;; インチキだ
+
+
+;; 102 Capitalize
+(fn [s]
+  (reduce #(str % (clojure.string/capitalize %2)) (.split s "-")))
+
+;; #(clojure.string/replace % #"-(\w)" (fn [[a b]] (clojure.string/capitalize b))) ; 正規表現による置換
+
+;; #80 perfect number
+(defn perfect [x]
+  (let [s (filter #(= 0 (mod x %)) (range 1 x))]
+    (= x (apply + s))))
+
+;; #85 Power set
+;; (defn pows [s]
+;;   (conj
+;;    (set
+;;     (reduce #(for [x % y %2] (conj x y)) #{#{}} (repeat (count s) s)))
+;;    #{}))
+
+;; (pows (into #{} (range 10))) で帰ってこなくなるくらい遅い
+;; これは途中の計算で重複が許されてしまっているため。
+
+(defn pows [s]
+  (conj
+    (reduce #(set (for [x % y %2] (conj x y))) #{#{}} (repeat (count s) s))
+   #{}))
+
+;; 改良版。途中の重複をsetで消している。
+
+(fn pow [s] (if (empty? s) #{s} (let [
+    s1 (first s)
+    sn (disj s s1)
+    pp (pow sn)
+    pn (for [i pp] (conj i s1))]
+    (into pp pn))))
+
+;; 再帰による解法
+
+;; #77 Anagram Finder
+(defn ana [c]
+  (reduce
+   #(let [v (val %2)] (if (< 1 (count v)) (conj % (set v)) %)) #{}
+   (group-by frequencies c)))
+
+(fn [words]
+  (set (map set (filter #(< 1 (count %))
+                        (vals (group-by sort words))))))
+
+;; sortで良かった。。。
