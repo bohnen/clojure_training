@@ -673,3 +673,12 @@
                         (vals (group-by sort words))))))
 
 ;; sortで良かった。。。
+
+;; #60 Sequence reductions
+(defn myred
+  ([f c] (myred f (first c) (rest c)))
+  ([f i c]
+   (lazy-seq
+    (cons i
+          (lazy-seq (if-not (empty? c) (myred f (f i (first c)) (rest c)) ))))))
+
