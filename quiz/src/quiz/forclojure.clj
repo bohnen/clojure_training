@@ -682,3 +682,20 @@
     (cons i
           (lazy-seq (if-not (empty? c) (myred f (f i (first c)) (rest c)) ))))))
 
+;; #132 Insert between two items
+(defn inst [f v [l & rs :as c]]
+  (if (empty? rs)
+    c
+    (lazy-seq
+     (cons l (lazy-seq
+              (if (f l (first rs))
+                (cons v (inst f v rs))
+                (inst f v rs)))))))
+
+;;
+(defn inst [p v xs]
+  (mapcat
+    #(if (p %1 %2) [%1 v] [%1])
+    xs
+    (lazy-cat (rest xs) (take 1 xs))))
+;; 別の回答 ただ、これバグがあって、例えば p が = のときは答えが異なる。
