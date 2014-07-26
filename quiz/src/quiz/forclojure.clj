@@ -699,3 +699,42 @@
     xs
     (lazy-cat (rest xs) (take 1 xs))))
 ;; 別の回答 ただ、これバグがあって、例えば p が = のときは答えが異なる。
+
+;; #105 Identify keys and values
+(defn kvs [coll]
+  (letfn [(subkvs [ret k cl]
+    (if (empty? cl)
+      ret
+      (let [f (first cl) c (rest cl)]
+        (if (keyword? f)
+          (recur (assoc ret f []) f c)
+          (recur (assoc ret k (conj (get ret k) f)) k c)))))]
+    (subkvs {} nil coll)))
+
+;; コードゴルフ版
+;; (fn  [ret k cl]
+;;   (if (empty? cl)
+;;     ret
+;;     (let [f (first cl) c (rest cl)]
+;;       (if (keyword? f)
+;;         (recur (assoc ret f []) f c)
+;;         (recur (assoc ret k (conj (get ret k) f)) k c))))) {} nil
+
+;; 0x89
+(fn f
+  ([x] (f x {})) ;; 入力からサブルーチンへの変換
+  ([[k & r] a] ;; k & r が配列部, aはアキュムレーター
+     (if k
+       (let [[v n] (split-with number? r)] ;; split-withは、trueな部分とそれ以降に分割するのに利用できる
+        (f n (conj a [k v])))
+       a)))
+
+;; これはアキュムレーターを使う再帰のシンプルなフォームとして優れている
+
+(defn kvs
+  ([x] (kvs x {}))
+  ([[k & r] a]
+   (if k
+     (let [[v n] (split-with number? r)]
+       (kvs n (conj a [k v])))
+     a)))
