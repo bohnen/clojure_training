@@ -738,3 +738,61 @@
      (let [[v n] (split-with number? r)]
        (kvs n (conj a [k v])))
      a)))
+
+
+;; #137 digits and bases
+;; (__ 9 2)  4 mod 1 -> 2 mod 0 -> 1 mod 0 -> 0 mod 1
+;; (__ n n)  1 mod 0 -> 0 mod 1
+
+(defn f
+  ([n b] (f n b '()))
+  ([n b a]
+   (if (= n 0)
+     a
+     (f (quot n b) b (conj a (mod n b))))))
+;; これだと、(f 0 11) が '() になってしまうのでNG。0 -> 0を入れないと。
+(defn f
+  ([n b] (if (= n 0) '(0)
+           (f n b '())))
+  ([n b a]
+   (if (= n 0)
+     a
+     (f (quot n b) b (conj a (mod n b))))))
+
+;; 0x89
+(fn it
+   ([n base] (it n base []))
+   ([n base res]
+    (let [q (quot n base)
+          r (rem n base)
+          nres (cons r res)  ;; ここで [] -> [0] になる
+          ]
+      (if (zero? q)
+        nres
+        (recur q base nres))))
+   )
+
+;; 上のアイディアを使って
+(defn f
+  ([n b] (f n b []))
+  ([n b a]
+   (let [q (quot n b)
+         m (mod n b)
+         r (cons m a)]
+     (if (= 0 q)
+       r
+       (f q b r)))))
+
+;; acceca1
+(fn base [x b] (if (< x b) [x] (conj (base (quot x b) b) (mod x b))))
+;; 基数より小さくなったらそれ自身を返し、それ以外なら余りを追加していくシンプルな回答。
+
+;; #69 Merge with a Function
+(defn mymerge [f c & cols]
+  (reduce
+   #(reduce (fn [l r]
+              (let [k (key r)
+                    v (val r)
+                    w (get l k)]
+                (if w (assoc l k (f w v)) (assoc l k v)))) % %2)
+    c cols))
