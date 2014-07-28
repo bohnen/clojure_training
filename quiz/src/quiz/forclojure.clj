@@ -796,3 +796,32 @@
                     w (get l k)]
                 (if w (assoc l k (f w v)) (assoc l k v)))) % %2)
     c cols))
+
+
+;; #86 Happy Numbers
+(defn happy [x]
+  (letfn [(hpy [i]
+               (->> (map #(- (int %) 48) (str i))
+                    (reduce #(+ % (* %2 %2)) 0)))
+          (happ [n a]
+                (cond
+                 (= 1 n) true
+                 (a n) false
+                 true (recur (hpy n) (conj a n))))]
+    (happ x #{})))
+
+;; containsを使わなくても、setの場合は (#{:a} :a) -> :a だった。
+
+;; #75 Euler's totient Function
+(defn totient [x]
+  (->> (range 1 x)
+       (filter #(and (ratio? (/ x %)) (= x (numerator (/ x %)))))
+       (count)
+       (inc)))
+ ;; ratio? denominator numerator
+
+ ;; #98 Equivalence Classes
+ (fn [f s]
+  (reduce #(conj % (set (val %2))) #{} (group-by f s)))
+
+ ;; #(set (map set (vals (group-by %1 %2)))) こっちの方が短かった
