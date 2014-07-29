@@ -833,3 +833,49 @@
          i (/ (count c) 2)
          f #(apply + (% i c))]
      (= (f take) (f take-last))))
+
+ ;; #110 Sequence of pronunciations
+ (defn pron [c]
+   (let [g (group-by identity c)
+         cn (mapcat #(vector (count (val %)) (key %)) g)]
+     (cons cn (lazy-seq (pron cn)))))
+ ;; こうじゃない。最初の連続したN個のxを (N x M y ...) と数えるもの
+
+ (fn [c a]
+   (if (empty? c)
+     a
+     (let [f (first c)
+           [g r] (split-with #(= f %) c)
+           i (count g)]
+       (recur r (conj a i f)))))
+;; 基本のルーチン
+
+(defn proc [c]
+  (let [cn (loop [c c a []]
+             (if (empty? c) a
+               (let [f (first c)
+                     [g r] (split-with #(= f %) c)
+                     i (count g)]
+                 (recur r (conj a i f)))))]
+    (cons cn (lazy-seq (proc cn)))))
+;; 一旦完成
+
+(defn proc [c]
+ (letfn [(pr [c]
+   (if (empty? c)
+     c
+     (let [f (first c)
+           [g r] (split-with #(= f %) c)
+           i (count g)]
+       (cons i (cons f (pr r))))))]
+   (rest (iterate pr c))))
+
+;; 別バージョン
+
+(fn [y]
+  (rest (iterate (fn [x]
+                   (reduce concat
+                           (map #(list (count %) (first %))
+                                (partition-by identity x)))) y)))
+
+;; 0x89 そうだ、partition-by だった。。
