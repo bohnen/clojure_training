@@ -825,3 +825,11 @@
   (reduce #(conj % (set (val %2))) #{} (group-by f s)))
 
  ;; #(set (map set (vals (group-by %1 %2)))) こっちの方が短かった
+
+
+ ;; #115 The balance of N
+ (defn bal [n]
+   (let [c (map #(- (int %) 48) (str n))
+         i (/ (count c) 2)
+         f #(apply + (% i c))]
+     (= (f take) (f take-last))))
