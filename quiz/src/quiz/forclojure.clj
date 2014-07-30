@@ -903,3 +903,42 @@
 ;; 0x89 ゴルフ時は関数に別名を付与する。
 ;; このアルゴリズムは、 [[1 2 3] [2 3] [3 4]] で、b = 1, e = [2 3] c = [[2 3] [3 4]] となる。
 ;; 二回目は (i [[2 3] [3 4] [2 3]]). -> (i [[3] [3 4] [2 3]]) -> (i [[3] [3] [3 4]]) -> 3
+
+;; #78 Reimplement trampoline
+(defn tranp [f & as]
+  (loop [r (apply f as)]
+    (if (fn? r)
+      (recur (r))
+      r)))
+
+;; aceeca1
+;; #((fn [x] (if-not (fn? x) x (recur (x)))) (%1 %2))
+
+;; #93 Partially Flatten a Sequence
+;; (first col) が seqential? なら
+;; ちょっとスキップ
+
+;; #114 Global take-while
+;; 何回目のマッチかというカウントと、再帰呼び出しを使えば実現できそう
+(defn gtk [n f [x & xs]]
+  (let [t (f x)
+        m (if t (dec n) n)]
+    (if (and t (= n 1)) '()
+      (cons x (gtk m f xs)))))
+
+;; #158 Decurry
+(defn decurry [f]
+  (fn [x & xs]
+    (if (empty? xs) (f x)
+      (recur (f x) (first xs) (rest xs)))))
+
+#(fn [& c]
+   (loop [f % [x & xs] c]
+    (if (empty? xs) (f x)
+      (recur (f x) xs))))
+
+;; 0x89
+(fn [f]
+  (fn [& args]
+    (reduce #(%1 %2) f args)))
+
