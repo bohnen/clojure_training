@@ -879,3 +879,27 @@
                                 (partition-by identity x)))) y)))
 
 ;; 0x89 そうだ、partition-by だった。。
+
+;; #144 Oscilrate
+(defn osc [v & fs]
+  (reductions #(%2 %) v (cycle fs)))
+
+;; #108 lazy Searching
+(defn search [& cols]
+  (let [vs (first (apply map (fn [& v] v) cols))
+        f (apply max vs)]
+    (if (apply = vs)
+      f
+      (apply search (map (fn [x] (drop-while #(> f %) x)) cols)))))
+
+(fn i
+  [& x]
+    (let [f first
+          a apply
+          [[b & e] & c] (sort-by f x)]
+      (if (a = (map f x))
+       b
+       (a i (conj c e)))))
+;; 0x89 ゴルフ時は関数に別名を付与する。
+;; このアルゴリズムは、 [[1 2 3] [2 3] [3 4]] で、b = 1, e = [2 3] c = [[2 3] [3 4]] となる。
+;; 二回目は (i [[2 3] [3 4] [2 3]]). -> (i [[3] [3 4] [2 3]]) -> (i [[3] [3] [3 4]]) -> 3
