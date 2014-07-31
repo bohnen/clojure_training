@@ -942,3 +942,55 @@
   (fn [& args]
     (reduce #(%1 %2) f args)))
 
+;; #103 generating k-combination
+;; 再帰でfor で良さそう。重複はsetで消える
+
+(defn genk [n cs]
+  (set
+   (filter #(= n (count %))
+           (loop [m n a #{#{}}]
+             (if (= 0 m) a
+               (recur (dec m) (for [x a y cs] (conj x y))))))))
+;; forにする必要があるな
+
+;; 4clojure1
+(fn [k s]
+  (set (filter #(= k (count %)) (reduce #(concat %1 (map (fn [i] (set (conj i %2))) %1)) #{#{}} s))))
+
+
+;; #171 intervals
+(defn interval [col]
+  (let [itvl (fn [a l [x & xs :as cs]]
+               (if (empty? cs)
+                 (partition 2 (conj a l))
+                 (recur (if (<= x (inc l)) a (conj a l x)) x xs)))
+        ss (sort col)
+        f (first ss)]
+    (if (empty? col) []
+      (itvl [f] f (rest ss)))))
+
+(defn interval [col]
+  (letfn [(f
+           ([a [x & xs]] (if x (f (conj a x) x xs) a))
+           ([a l [x & xs :as cs]]
+            (if x
+              (recur (if (<= x (inc l)) a (conj a l x)) x xs)
+              (partition 2 (conj a l)))))]
+    (f [] (sort col))))
+
+;; 0x89
+#(let [[y & z] (sort (set %))]
+     (if y
+       (reverse
+         (reduce
+           (fn [[[a b & _] & d] c]
+             (if (= (inc b) c)
+               (cons
+                 [a c]
+                 d)
+               (list*
+                 [c c]
+                 [a b]
+                 d)))
+           [[y y]] z))
+       []))
