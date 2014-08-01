@@ -994,3 +994,24 @@
                  d)))
            [[y y]] z))
        []))
+
+;; なるほど、これはリストの先頭をうまく使って、reduceで実現している。
+
+;; #148 The big divide
+(defn dev [n a b]
+  (let [d (dec n)
+        i (quot d a)
+        j (quot d b)
+        c (* a b)
+        k (quot d c)
+        s #(/ (*' % (inc %) %2) 2)]
+    (+' (s i a) (s j b) (- (s k c)))))
+
+;; integer overflow +', *' を使えばbigintになる
+
+;; pci's
+(fn [n a b]
+  (letfn
+    [(s [i] (quot (* i (inc i)) 2))
+    ,(d [x] (* x (s (quot (dec n) x))))]
+      (- (+ (d a) (d b)) (d (* a b)))))
