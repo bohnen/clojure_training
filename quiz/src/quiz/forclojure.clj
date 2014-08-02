@@ -916,7 +916,20 @@
 
 ;; #93 Partially Flatten a Sequence
 ;; (first col) が seqential? なら
-;; ちょっとスキップ
+(defn pflat [c]
+  (let [s sequential? ]
+    (filter #(and (s %) (not (s (first %))))
+            (tree-seq s seq c))))
+
+;; 0x89
+(fn _ [x]
+          (if
+            (not (sequential? (first x))) [x]
+            (reduce concat (map _ x))
+            ))
+
+;; mapはseqのレベルを一つ下る、concatは何回やってもレベルを変えないということに気が付く必要がある。
+
 
 ;; #114 Global take-while
 ;; 何回目のマッチかというカウントと、再帰呼び出しを使えば実現できそう
