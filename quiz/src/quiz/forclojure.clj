@@ -1028,3 +1028,53 @@
     [(s [i] (quot (* i (inc i)) 2))
     ,(d [x] (* x (s (quot (dec n) x))))]
       (- (+ (d a) (d b)) (d (* a b)))))
+
+;; #177 reducing brackets
+;; ちょっと考えよう
+;; (defn bracket [c [x & xs]]
+;;   (let [s #{\( \{ \[} e #{\) \} \]}]
+;;     (cond
+;;      (empty? xs) true
+;;      ())
+;;     ))
+
+;; 単にマッチを探すだけなら、reduceすればよい
+;; l bracket -> (cons x a)
+;; r bracket -> (if matched) (drop 1 a) (cons x a) ; 以降、絶対マッチしなくなる
+;; 最後に a が空でなければ、false
+(defn bracket [col]
+  (let [l #{\( \[ \{}
+        r #{\) \] \}}
+        m (zipmap r l)]
+    (empty?
+     (reduce (fn [a x]
+               (cond
+                (l x) (cons x a)
+                (r x) (if (= (first a) (m x)) (rest a) (cons x a))
+                :else a))
+             [] col))))
+
+;; 0x89
+#(empty?
+    (reduce (fn [[s & t :as u] x]
+              (cond
+                (= x ({\{ \} \( \) \[ \]} s)) t
+                ((set "{}()[]") x) (cons x u)
+                1 u))
+            ()
+            %))
+;; このset指定の仕方は文字列からset作る際の参考になる
+;; (= x (...) s) は、逆にした、(= s (...) x) はダメ。s = () のとき、trueになってしまう。
+;; よく考えられている
+
+(defn bracket [col]
+  (let [l (set "({[")
+        r (set ")}]")
+        m (zipmap l r)]
+    (empty?
+     (reduce (fn [[s & t :as u] x]
+               (cond
+                (= x (m s)) t
+                (or (l x) (r x)) (cons x u)
+                :else u))
+             [] col))))
