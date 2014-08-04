@@ -1067,6 +1067,7 @@
 ;; (= x (...) s) は、逆にした、(= s (...) x) はダメ。s = () のとき、trueになってしまう。
 ;; よく考えられている
 
+
 (defn bracket [col]
   (let [l (set "({[")
         r (set ")}]")
@@ -1078,3 +1079,189 @@
                 (or (l x) (r x)) (cons x u)
                 :else u))
              [] col))))
+
+;; #112 Sequs Horribils
+
+;; まずは、例題。そのまま出力する関数
+(defn ex1 [[x & xs]]
+  (if x
+    (if (sequential? x)
+      (cons (ex1 x) (ex1 xs))
+      (cons x (ex1 xs)))
+    '()))
+
+;; ここに集計を加えるにはどうするか？
+
+(defn ex2 [{s :sum [x & xs] :col}]
+  (if x
+    (if (sequential? x)
+      (ex2 )
+      (ex2 {:sum (+ s x) :col })))
+  )
+
+;; 別のをやろう。
+
+;; #116 Prime sandwich
+
+;; 例題。Primeのリストを返す
+(defn prime [i ps]
+  (if (every? #(not= 0 (mod i %)) ps)
+    (cons i (lazy-seq (prime (inc i) (conj ps i))))
+    (prime (inc i) ps)))
+
+;; Primeかどうか判別する
+(defn isprime [n]
+  (if ((set (take-while #(<= % n) (prime 3 [2]))) n) true false))
+
+;; 本番
+(defn sandwich [n b [x & xs]]
+  (println b ":" x ":" (first xs))
+  (cond
+   (> x n) false
+   (= x n) (if (= n (/ (+ b (first xs)) 2)) true false)
+   :else (recur n x xs)))
+
+;; 回答
+(defn sandwich [n]
+  (let [p (fn prime [i ps]
+            (if (every? #(not= 0 (mod i %)) ps)
+              (cons i (lazy-seq (prime (inc i) (conj ps i))))
+              (prime (inc i) ps)))]
+    (loop [b 0 [x & xs] (p 3 [2])]
+      (cond
+       (> x n) false
+       (= x n) (if (= n (/ (+ b (first xs)) 2)) true false)
+       :else (recur x xs)))))
+
+
+;; #150 Palindromic Numbers
+
+;; 例題 まずは、数を生成する
+
+(defn palindrome [i]
+  (let [s (range 10)]
+    (cond
+     (= 0 i) '("")
+     (= 1 i) s
+     :else (for [x s y s z (palindrome (- i 2)) :when (= x y)] (Integer/parseInt (str x z y))))))
+
+;; Integerにしたとき、090 -> 90 になってしまうが、まぁいいか。。。
+;; これで後に失敗する
+
+;; 本番
+(defn palindrome [n]
+  (let [c (count (str n))
+        s (range 10)
+        p (fn pali [i]
+            (cond
+             (= 0 i) '("")
+             (= 1 i) s
+             :else (for [x s z (pali (- i 2))] (Integer/valueOf (str x z x)))))]
+    (filter #(>= % n)
+                (mapcat #(p %) (drop-while #(< % c) (range))))))
+
+;; タイムアウトになってしまった。。。しかも、計算間違ってる
+
+
+;; 練習。再度生成ルーチン
+(defn palindrome [n] ;; iは桁数
+  (let [q (quot n 2)
+        t #(long (Math/pow 10 %))
+        l #(range (t (dec %)) (t %))
+        d (range 10)
+        e->l (fn ([x y] (Long/valueOf (apply str x y (reverse (str x))))))]
+    (cond
+     (= 0 q) d
+     (even? n) (map #(e->l % "") (l q))
+     :else (for [x (l q) y d] (e->l x y)))))
+
+(defn palis []
+  (mapcat palindrome (rest (range))))
+
+;; 本番2
+(defn palindrome [m]
+  (letfn [(p [n]
+             (let [q (quot n 2)
+                   t #(long (Math/pow 10 %))
+                   l #(range (t (dec %)) (t %))
+                   d (range 10)
+                   e->l (fn ([x y] (Long/valueOf (apply str x y (reverse (str x))))))]
+               (cond
+                (= 0 q) d
+                (even? n) (map #(e->l % "") (l q))
+                :else (for [x (l q) y d] (e->l x y)))))]
+    (drop-while #(< % m)
+            (mapcat #(p %) (drop-while #(< % (count (str m))) (range))))))
+
+;; うーんまたタイムアウト。 少し早くするために、10^(n-1) - 10^(n) ではなく、数からやっていこう
+
+;; 練習。生成ルーチン
+(defn palindrome [l cols]
+  (let [d (range 10)
+        a->l (fn ([x y] (Long/valueOf (apply str x y (reverse (str x))))))]
+    (cond
+     (= 0 (quot l 2)) d
+     (even? l) (map #(a->l % "") cols)
+     :else (for [x cols y d] (a->l x y)))))
+
+(defn palindrome [n]
+  (letfn [(p [l cols]
+             (let [d (range 10)
+                   a->l (fn ([x y] (Long/valueOf (apply str x y (reverse (str x))))))]
+               (cond
+                (= 1 l) d
+                (even? l) (map #(a->l % "") cols)
+                :else (for [x cols y d] (a->l x y))))
+             )]
+    (let [c (count (str n))
+          q #(quot % 2)
+          r range
+          t #(long (Math/pow 10 %))
+          dr #(r (t (dec (q %))) (t (q %)))]
+      ;;       (println c ":" (quot n (t (- c q))))
+      (lazy-cat
+       (drop-while #(< % n)
+                   (p c (r (quot n (t (- c (q c)))) (t (q c)))))
+       (mapcat #(p % (dr %)) (rest (iterate inc c)))))))
+
+;; やっぱりタイムアウト。シンプルに考えざるをえない (これは結構シンプルでいいと思うんだけど)
+(defn palindrome [n]
+  (let [s (str n)
+        l (count s)
+        q (quot l 2)
+        left (take q s)
+        right (reverse left)
+        zero (repeat q \0)
+        a->l #(Long/valueOf (apply str %))
+        sym #(a->l (concat % (if (even? l) %2 (cons (get s q) %2))))
+        pal (sym left right)
+        d (+ (sym left zero) (long (Math/pow 10 q)))]
+    (if (> n pal)
+      (recur d)
+      (cons pal (lazy-seq (palindrome d))))))
+
+;; これでもタイムアウト。どうすればいいんだこれ
+;; そうか、(> n sym) のときは、rightを0クリアして 10^q すれば、必ずpalindromeになるんだ
+;; -> 自分のマシンでは答えが返ってくるが、4clojure replではダメ。。。
+
+;; 練習。再帰的に定義してみる
+(defn palindrome [l] ;; 桁数
+   (cond
+    (= l 1) (map str "0123456789")
+    (= l 2) (map str (range 0 10) (range 0 10))
+    :else (for [x (range 0 10) y (palindrome (- l 2))] (str x y x))))
+
+
+;; memoize 若干早い。後のためにとっておく
+
+(defn palindrome [l] ;; 桁数
+  (let [p (memoize palindrome)]
+   (cond
+    (= l 1) (map str "0123456789")
+    (= l 2) (map str (range 0 10) (range 0 10))
+    :else (for [x (range 0 10) y (p (- l 2))] (str x y x)))
+    )
+  )
+
+;; メーリングリストでもローカルでは結果でるけど、4clojureでは結果でないという声がある。
+;; ちょっと置いておこう
