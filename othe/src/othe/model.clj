@@ -18,3 +18,16 @@
 (def board (ref []))
 (def player (ref nil))
 
+(def successor
+  (let [north (fn [pos] (- pos b-size))
+        east inc
+        south (fn [pos] (+ pos b-size))
+        west dec]
+    {:n north
+     :ne (comp north east)
+     :e east
+     :se (comp south east)
+     :s south
+     :sw (comp south west)
+     :w west
+     :nw (comp north west)}))
