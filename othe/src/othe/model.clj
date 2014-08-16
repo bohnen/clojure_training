@@ -31,3 +31,18 @@
      :sw (comp south west)
      :w west
      :nw (comp north west)}))
+
+(def not-wrapped?
+  (let [east? (fn [pos] (> (col-from-pos pos) first-col))
+        west? (fn [pos] (< (col-from-pos pos) (dec last-col)))]
+    {:n identity
+     :ne east?
+     :e east?
+     :se east?
+     :s identity
+     :sw west?
+     :w west?
+     :nw west?}))
+
+(defn- in-board? [pos]
+  (and (>= pos first-pos) (< pos last-pos)))
