@@ -46,3 +46,13 @@
 
 (defn- in-board? [pos]
   (and (>= pos first-pos) (< pos last-pos)))
+
+(defn- posline-for-dir
+  "posにおけるdir方向へのposline"
+  [pos dir]
+  (let [suc (successor dir)
+        nwrap? (not-wrapped? dir)]
+    (take-while
+     (fn [pos]
+       (and (nwrap? pos) (in-board? pos)))
+     (iterate suc (suc pos)))))
