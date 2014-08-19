@@ -56,3 +56,22 @@
      (fn [pos]
        (and (nwrap? pos) (in-board? pos)))
      (iterate suc (suc pos)))))
+
+;; 小道具
+(defn- free? [brd pos] (= (brd pos) :free))
+
+;; (= (brd pos) bw) だけでもいい気がするのだが
+(defn- self? [brd pos bw]
+  (and (not (free? brd pos)) (= (brd pos) bw)))
+
+;; not self? にできないものか?
+(defn- opponent? [brd pos bw]
+  (and (not (free? brd pos)) (not= (brd pos) bw)))
+
+(defn- all-poslines
+  "posにおける、各方向へのposlineを集めたシーケンス"
+  [pos]
+  (filter not-empty
+          (for [dir dirs] (posline-for-dir pos dir))))
+
+
