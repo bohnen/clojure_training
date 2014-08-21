@@ -32,3 +32,4 @@
        (range (inc first-row) (inc last-row))
        (repeat b-size " ")
        (board-strs brd)))
+
