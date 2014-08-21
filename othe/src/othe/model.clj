@@ -19,6 +19,7 @@
 (def player (ref nil))
 
 (def successor
+  "各方向の隣接マスを返す関数のマップを返す"
   (let [north (fn [pos] (- pos b-size))
         east inc
         south (fn [pos] (+ pos b-size))
@@ -33,6 +34,7 @@
      :nw (comp north west)}))
 
 (def not-wrapped?
+  "盤の端に到達していないか"
   (let [east? (fn [pos] (> (col-from-pos pos) first-col))
         west? (fn [pos] (< (col-from-pos pos) (dec last-col)))]
     {:n identity
@@ -45,6 +47,7 @@
      :nw west?}))
 
 (defn- in-board? [pos]
+  "盤に存在するか"
   (and (>= pos first-pos) (< pos last-pos)))
 
 (defn- posline-for-dir
