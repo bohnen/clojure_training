@@ -101,3 +101,51 @@
     (all-poslines pos))))
 
 
+(def initial-oprs
+  "ゲームの初期状態(:bと:wが2個ずつ)を表すoprのマップ"
+  (let [cntr (dec (quot b-size 2))
+        pos (pos-from-rowcol cntr cntr)]
+    {pos :b
+     ((successor :se) pos) :b
+     ((successor :e) pos) :w
+     ((successor :s) pos) :w}))
+
+(defn- board-manipulator
+  "oprのマップに基づいて、盤面を変更するラムダ"
+  [oprs]
+  (fn [pos st] (if-let [s (oprs pos)]
+                 s st)))
+
+(defn- manipulated-board
+  "manipulatorを盤面に対して呼んだ後の新しい盤面"
+  [brd manip]
+  (vec (map-indexed manip brd)))
+
+;; ゲーム初期状態
+;; (let
+;;   [blank
+;;    (vec (repeat (- last-pos first-pos) :free))
+;;    manip (board-manipulator initial-oprs)]
+;;   (manipulated-board blank manip))
+
+(defn- make-oprs
+  "poslineに関して、bwにとってのoprを計算する"
+  [brd posline bw]
+  (reduce (fn [m pos] (assoc m pos bw)) {}
+          (take-while
+           (fn [pos] (opponent? brd pos bw))
+           posline)))
+
+(defn- make-all-oprs
+  "posにおける全poslineに関して、bwにとってのoprを計算する"
+  [brd pos bw]
+  (apply merge
+         (cons {pos bw}
+               (for [posline
+                     (filter
+                      (fn [pos] (clamping? brd pos bw))
+                      (all-poslines pos))]
+                 (make-oprs brd posline bw)))))
+
+
+
