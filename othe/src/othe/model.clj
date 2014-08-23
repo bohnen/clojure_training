@@ -148,4 +148,16 @@
                  (make-oprs brd posline bw)))))
 
 
+(defn init-game
+  "新しいゲームを始める"
+  [ob]
+  (dosync
+   (let [blank (vec (repeat (- last-pos first-pos) :free))
+         manip (board-manipulator initial-oprs)]
+     (ref-set board (manipulated-board blank manip)))
+   (ref-set player :b)
+   (def observer ob))
+  (observer))
+
+
 
