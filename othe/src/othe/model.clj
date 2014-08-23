@@ -159,5 +159,31 @@
    (def observer ob))
   (observer))
 
+(defn- opponent [bw] (if (= bw :b) :w :b))
+
+(defn- has-pos-to-play?
+  "bwにとって、打てる場所はあるか?"
+  [brd bw]
+  (not-empty
+   (filter (fn [pos] (playable? brd pos bw) all-pos))))
+
+(defn- next-player
+  "bwの次は誰の番か決める"
+  [bw brd]
+  (let [nbw (opponent bw)]
+    (if (has-pos-to-play? brd nbw) nbw bw)))
+
+(defn play-move
+  "posへうつ"
+  [pos]
+  (dosync
+   (if (not (playable? (deref board) pos (deref player)))
+     (observer :err)
+     (do
+       (let
+         [manip (board-manipulator (make-all-oprs (deref board) pos (deref player)))]
+         (alter board manipulated-board manip))
+       (alter player next-player (deref board))
+       (observer)))))
 
 
