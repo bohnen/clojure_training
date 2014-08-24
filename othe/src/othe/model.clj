@@ -186,4 +186,15 @@
        (alter player next-player (deref board))
        (observer)))))
 
+(defn- retrieve-game-state
+  "ゲーム状態(黒番なら:b, 白番なら :w, ゲーム終了なら :over"
+  []
+  (let [brd @board bw @player]
+    (if (empty?
+         (filter
+          (fn [pos] (free? brd pos))
+          all-pos))
+      :over
+      bw)))
+
 

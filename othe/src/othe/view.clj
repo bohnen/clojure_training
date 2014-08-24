@@ -35,3 +35,28 @@
        (repeat b-size " ")
        (board-strs brd)))
 
+
+(def separator (join (repeat 50 \-)))
+
+(defn- score-str
+  "スコア文字列"
+  [bs ws]
+  (let [s (str "BLACK(x):" bs ",WHITE(o):" ws)]
+    (format "%50s" s)))
+
+(defn- winner-str
+  "勝者文字列"
+  [bs ws]
+  (cond
+   (> bs ws) "Winner is BLACK. Congratulations!"
+   (> ws bs) "Yeah, WHITE won!!!"
+   :else "It's a draw game."))
+
+(defn- redraw-board
+  "盤面を表示"
+  []
+  (println col-header-str)
+  (dorun
+   (map println
+        (board-strs-with-row (retrieve-board)))))
+
