@@ -82,3 +82,17 @@
   (println "Input the column name first, like 'a1' or 'b2'")
   (println "Just hit Enter to exit.")
   (def command-handler handler))
+
+(defn- view-thread
+  "ユーザー入力を監視"
+  []
+  (loop [pos (wait-for-cmd)]
+    (when pos
+      (command-handler [:move pos])
+      (recur (wait-for-cmd))))
+  (command-handler [:exit]))
+
+(defn start-ui
+  "ユーザーインタラクション"
+  []
+  (.start (Thread. view-thread)))
