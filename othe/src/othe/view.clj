@@ -96,3 +96,17 @@
   "ユーザーインタラクション"
   []
   (.start (Thread. view-thread)))
+
+(defn- wait-for-cmd
+  "ユーザー入力を待ち、nilかposを返す"
+  []
+  (loop [line (read-cmd)]
+    (if (empty? line)
+      (println "Exiting...")
+      (if-let [pos (pos-from-line line)]
+        pos
+        (do
+          (print "Input should be like a1 or b2. Or Enter to exit: ")
+          (flush)
+          (recur (read-cmd)))))))
+
