@@ -110,3 +110,30 @@
           (flush)
           (recur (read-cmd)))))))
 
+(defn- read-cmd
+  "stdinから、コマンドを読む"
+  []
+  (print (if (is-black-turn?)
+           "It's BLACK's turn: "
+           "HEY WHITE, your turn: "))
+  (flush)
+  (read-line))
+
+(defn- col-from-line
+  "ユーザー入力から桁を解読"
+  [line]
+  (.indexOf col-headers (subs line 0 1)))
+
+(defn- row-from-line
+  "ユーザー入力から行を解読"
+  [line]
+  (dec (read-string (subs line 1))))
+
+(defn- pos-from-line
+  "ユーザー入力からposを解読。不正な入力値ならnil"
+  [line]
+  (when (re-find #"^[a-h][1-8]$" line)
+    (let [r (row-from-line line)
+          c (col-from-line line)]
+      (pos-from-rowcol r c))))
+
