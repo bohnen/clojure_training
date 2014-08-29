@@ -165,7 +165,7 @@
   "bwにとって、打てる場所はあるか?"
   [brd bw]
   (not-empty
-   (filter (fn [pos] (playable? brd pos bw) all-pos))))
+   (filter (fn [pos] (playable? brd pos bw)) all-pos)))
 
 (defn- next-player
   "bwの次は誰の番か決める"

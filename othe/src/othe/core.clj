@@ -15,5 +15,5 @@
   "entry point"
   [& args]
   (init-view on-command)
-  (init-game on-stage-changed)
+  (init-game on-state-changed)
   (start-ui))

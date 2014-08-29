@@ -25,7 +25,7 @@
   "ボードの各行を書いたもの"
   [brd]
   (for [row (partition b-size brd)]
-    (join "  " (map st-str row))))
+    (join " " (map st-str row))))
 
 (defn- board-strs-with-row
   "行番号つき board-str"
@@ -60,6 +60,15 @@
    (map println
         (board-strs-with-row (retrieve-board)))))
 
+(defn init-view
+  "viewを初期化. handlerは、ユーザーコマンドのハンドラ"
+  [handler]
+  (println "Welcome to the Battle Zone!")
+  (println "'x' is Black and 'o' is white.")
+  (println "Input the column name first, like 'a1' or 'b2'")
+  (println "Just hit Enter to exit.")
+  (def command-handler handler))
+
 (defn on-state-changed
   "Model変化時のハンドラ"
   [& e]
@@ -73,42 +82,6 @@
       (when (is-game-over?)
         (println (str "GAME OVER: " (winner-str bs ws)))
         (command-handler [:exit])))))
-
-(defn init-view
-  "viewを初期化. handlerは、ユーザーコマンドのハンドラ"
-  [handler]
-  (println "Welcome to the Battle Zone!")
-  (println "'x' is Black and 'o' is white.")
-  (println "Input the column name first, like 'a1' or 'b2'")
-  (println "Just hit Enter to exit.")
-  (def command-handler handler))
-
-(defn- view-thread
-  "ユーザー入力を監視"
-  []
-  (loop [pos (wait-for-cmd)]
-    (when pos
-      (command-handler [:move pos])
-      (recur (wait-for-cmd))))
-  (command-handler [:exit]))
-
-(defn start-ui
-  "ユーザーインタラクション"
-  []
-  (.start (Thread. view-thread)))
-
-(defn- wait-for-cmd
-  "ユーザー入力を待ち、nilかposを返す"
-  []
-  (loop [line (read-cmd)]
-    (if (empty? line)
-      (println "Exiting...")
-      (if-let [pos (pos-from-line line)]
-        pos
-        (do
-          (print "Input should be like a1 or b2. Or Enter to exit: ")
-          (flush)
-          (recur (read-cmd)))))))
 
 (defn- read-cmd
   "stdinから、コマンドを読む"
@@ -136,6 +109,34 @@
     (let [r (row-from-line line)
           c (col-from-line line)]
       (pos-from-rowcol r c))))
+
+(defn- wait-for-cmd
+  "ユーザー入力を待ち、nilかposを返す"
+  []
+  (loop [line (read-cmd)]
+    (if (empty? line)
+      (println "Exiting...")
+      (if-let [pos (pos-from-line line)]
+        pos
+        (do
+          (print "Input should be like a1 or b2. Or Enter to exit: ")
+          (flush)
+          (recur (read-cmd)))))))
+
+(defn- view-thread
+  "ユーザー入力を監視"
+  []
+  (loop [pos (wait-for-cmd)]
+    (when pos
+      (command-handler [:move pos])
+      (recur (wait-for-cmd))))
+  (command-handler [:exit]))
+
+
+(defn start-ui
+  "ユーザーインタラクション"
+  []
+  (.start (Thread. view-thread)))
 
 ;; TODO 実行
 
