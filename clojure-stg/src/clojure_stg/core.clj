@@ -16,6 +16,10 @@
   (q/fill (:color state) 255 255)
   (q/text (str "left: " (:left state) " right: " (:right state)) 300,200))
 
+
+;; STG本ではCLOSとしてクラスとメソッドを定義しているが、
+;; clojureではmapと関数で十分だし、スコープを狭めたメソッドを定義することもないような
+;; 必要なら名前空間分けて、defn- するか？
 (defn update-key-state
   [key key-press state]
   (cond
