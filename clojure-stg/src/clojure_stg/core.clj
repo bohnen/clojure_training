@@ -17,26 +17,15 @@
   (q/text (str "left: " (:left state) " right: " (:right state)) 300,200))
 
 
-;; Keymap 保存のマクロ
-;; (defmacro key-state [& keys]
-;;   (list '))
+;; (defn defn-from [str args & body]
+;;   `(defn ~(symbol str) ~args ~@body))
 
 ;; (defmacro key-state [& keys]
 ;;   (let [f #(list '= % 'key)
 ;;         g #(list 'assoc 'state % 'key-press)
-;;         l (mapcat #(list (f %) (g %)) keys)
-;;         s 'state]
-;;     `(cond ~@l :else ~s)))
-
-(defn defn-from [str args & body]
-  `(defn ~(symbol str) ~args ~@body))
-
-(defmacro key-state [& keys]
-  (let [f #(list '= % 'key)
-        g #(list 'assoc 'state % 'key-press)
-        l (mapcat #(list (f %) (g %)) keys)]
-    (defn-from "update-key-state" '[key key-press state]
-      `(cond ~@l :else ~'state))))
+;;         l (mapcat #(list (f %) (g %)) keys)]
+;;     (defn-from "update-key-state" '[key key-press state]
+;;       `(cond ~@l :else ~'state))))
 
 ;; マクロで関数を作成するのはかなりトリッキー
 ;; 関数の引数はquoteする必要がある（名前空間で修飾されたくない）が、
@@ -55,19 +44,20 @@
 ;; STG本ではCLOSとしてクラスとメソッドを定義しているが、
 ;; clojureではmapと関数で十分だし、スコープを狭めたメソッドを定義することもないような
 ;; 必要なら名前空間分けて、defn- するか？
-(defn update-key-state
-  [key key-press state]
-  (cond
-   (= :left key) (assoc state :left key-press)
-   (= :right key) (assoc state :right key-press)
-   :else state))
+;; (defn update-key-state
+;;   [key key-press state]
+;;   (cond
+;;    (= :left key) (assoc state :left key-press)
+;;    (= :right key) (assoc state :right key-press)
+;;    :else state))
 
+(key-state :left :right :up :down)
 
 (defn keypressed
   [state {:keys [key key-code raw-key]}]
   ;; ここで、キーの同時押しに対応しよう
   ;; 必要なキーの情報を保持するstateを考えなければいけない。ただのmapでいいか。
-  (println key)
+;;   (println key)
   (update-key-state key true state))
 
 (defn keyreleased
