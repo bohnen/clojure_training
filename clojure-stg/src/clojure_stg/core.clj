@@ -1,13 +1,14 @@
 (ns clojure-stg.core
   (:require [quil.core :as q]
             [quil.middleware :as m]
-            [clojure-stg.character :as ch])
+            [clojure-stg.character :as ch]
+            [clojure.pprint :as pp])
   (:gen-class))
 
 (defn setup []
   (q/frame-rate 60)
   (q/color-mode :hsb)
-  {:player (ch/->Player (quot q/width 2) (quot q/height 2)) :color 0})
+  {:player (ch/->Player (quot (q/width) 2) (quot (q/height) 2)) :color 0})
 
 (defn update [state]
   (let [dx (cond
@@ -23,8 +24,8 @@
 (defn draw [state]
   (let [p (:player state)]
     (q/background 240)
+;;     (pp/pprint state)
     (q/fill (:color state) 255 255)
-;;     (q/text (str "left: " (:left state) " right: " (:right state)) 300,200))
     (q/ellipse (:x p) (:y p) 50 50)))
 
 ;; (defn defn-from [str args & body]

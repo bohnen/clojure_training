@@ -8,8 +8,8 @@
 (defrecord Player [x y])
 (defn- move [chr dx dy speed]
   (-> chr
-    (assoc :x (* dx speed))
-    (assoc :y (* dy speed))))
+    (update-in [:x] #(+ % (* dx speed)))
+    (update-in [:y] #(+ % (* dy speed)))))
 
 ;; TODO 汎用にするには、(/ dx (sqrt (+ (* dx dx) (* dy dy))))
 (defn ch-move [chr dx dy speed]
