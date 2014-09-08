@@ -11,22 +11,13 @@
   {:player (ch/->Player (quot (q/width) 2) (quot (q/height) 2)) :color 0})
 
 (defn update [state]
-  (let [dx (cond
-            (:left state) -1
-            (:right state) 1
-            :else 0)
-        dy (cond
-            (:up state) -1
-            (:down state) 1
-            :else 0)]
-    (update-in state [:player] ch/ch-move dx dy ch/player-speed)))
+  (ch/update-player state))
 
 (defn draw [state]
-  (let [p (:player state)]
     (q/background 240)
 ;;     (pp/pprint state)
     (q/fill (:color state) 255 255)
-    (q/ellipse (:x p) (:y p) 50 50)))
+    (ch/draw-player state))
 
 ;; (defn defn-from [str args & body]
 ;;   `(defn ~(symbol str) ~args ~@body))
