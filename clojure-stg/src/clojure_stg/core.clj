@@ -2,22 +2,29 @@
   (:require [quil.core :as q]
             [quil.middleware :as m]
             [clojure-stg.character :as ch]
-            [clojure.pprint :as pp])
+            [clojure.pprint :as pp]
+            [clojure-stg.enemy :as en])
   (:gen-class))
 
 (defn setup []
-  (q/frame-rate 60)
-  (q/color-mode :hsb)
-  {:player (ch/->Player (quot (q/width) 2) (quot (q/height) 2)) :color 0})
+  (let [player-def-x (quot (q/width) 2)
+        player-def-y (quot (q/height) 2)]
+    (q/frame-rate 60)
+    (q/color-mode :hsb)
+    {:player (ch/->Player player-def-x player-def-y)
+     :enemy (en/->Enemy 100 100 30 10 5 0)
+     :color 0}))
 
 (defn update [state]
-  (ch/update-player state))
+  (ch/update-player state)
+  (update-in state [:enemy] en/enemy-move ))
 
 (defn draw [state]
     (q/background 240)
 ;;     (pp/pprint state)
     (q/fill (:color state) 255 255)
-    (ch/draw-player state))
+    (ch/draw-player state)
+    (en/draw-enemy (:enemy state)))
 
 ;; (defn defn-from [str args & body]
 ;;   `(defn ~(symbol str) ~args ~@body))

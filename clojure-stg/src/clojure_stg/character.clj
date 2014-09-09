@@ -14,15 +14,15 @@
     (update-in [:x] #(+ % (* dx speed)))
     (update-in [:y] #(+ % (* dy speed)))))
 
-;; TODO 汎用にするには、(/ dx (sqrt (+ (* dx dx) (* dy dy))))
 (defn- ch-move [pyr dx dy speed]
+  "キャラクタを動かす"
   (if (and (not= dx 0) (not= dy 0))
     (let [l (sqrt (+ (* dx dx) (* dy dy)))]
       (move pyr (/ dx l) (/ dy l) speed))
     (move pyr dx dy speed)))
 
-;; 画面からはみ出しているかどうか
 (defn- fix-position [pyr]
+  "画面からはみ出しているかチェックし、はみ出したら画面の端で止める"
   (let [x (:x pyr)
         hw (/ player-width 2)
         dx (cond
@@ -40,6 +40,7 @@
         (assoc :y dy))))
 
 (defn update-player [state]
+  "キーの状態に応じてプレイヤーを動かす"
   (let [dx (cond
             (:left state) -1
             (:right state) 1
@@ -53,5 +54,6 @@
       (update-in [:player] fix-position))))
 
 (defn draw-player [state]
+  "プレイヤーを描画する"
   (let [p (:player state)]
     (q/ellipse (:x p) (:y p) player-width player-height)))
