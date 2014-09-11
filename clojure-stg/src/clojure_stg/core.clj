@@ -19,10 +19,14 @@
      :color 0}))
 
 (defn update [state]
-  (ch/update-player state)
-  (update-in state [:enemies] en/move-enemies ))
+  "状態更新。新しい状態を返すのを忘れないように"
+  (-> state
+      (ch/update-player)
+      (update-in [:enemies] en/move-enemies )
+      (update-in [:enemies] en/gc-enemies)))
 
 (defn draw [state]
+  "描画"
     (q/background 240)
 ;;     (pp/pprint state)
     (q/fill (:color state) 255 255)
