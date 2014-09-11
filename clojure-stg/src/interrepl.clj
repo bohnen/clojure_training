@@ -3,6 +3,7 @@
 ;; right.
 
 (require '(clojure-stg [enemy :as en]))
+(use '[clojure.tools.namespace.repl :only (refresh)])
 
 (def e1 (en/->Enemy 0 0 50 30 5 3))
 

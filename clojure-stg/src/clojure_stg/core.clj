@@ -12,19 +12,22 @@
     (q/frame-rate 60)
     (q/color-mode :hsb)
     {:player (ch/->Player player-def-x player-def-y)
-     :enemy (en/->Enemy 100 100 30 10 5 0)
+     :enemies (for [n (range 10)]
+                (en/->Enemy
+                 (+ 32 (* n (/ (q/width) 10)))
+                 0 64 64 1 1))
      :color 0}))
 
 (defn update [state]
   (ch/update-player state)
-  (update-in state [:enemy] en/enemy-move ))
+  (update-in state [:enemies] en/move-enemies ))
 
 (defn draw [state]
     (q/background 240)
 ;;     (pp/pprint state)
     (q/fill (:color state) 255 255)
     (ch/draw-player state)
-    (en/draw-enemy (:enemy state)))
+    (en/draw-enemies (:enemies state)))
 
 ;; (defn defn-from [str args & body]
 ;;   `(defn ~(symbol str) ~args ~@body))
