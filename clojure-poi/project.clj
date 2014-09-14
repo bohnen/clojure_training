@@ -10,4 +10,5 @@
 
   :main ^:skip-aot clojure-poi.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}})
+  :profiles {:uberjar {:aot :all}}
+  :eval-in-leiningen true)

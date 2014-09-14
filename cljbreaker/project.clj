@@ -12,6 +12,7 @@
          :init cljbreaker.handler/init
          :destroy cljbreaker.handler/destroy}
   :aot :all
+  :eval-in-leiningen true
   :profiles
   {:production
    {:ring
