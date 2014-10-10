@@ -21,7 +21,4 @@
 ;; (def cells (iterator-seq (.cellIterator row0)))
 ;; (map #(-> % .getRichStringCellValue .getString) cells)
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
+
