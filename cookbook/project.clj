@@ -4,7 +4,8 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [net.mikera/clisk "0.10.0"]]
+                 [net.mikera/clisk "0.10.0"]
+                 [org.clojure/core.logic "0.8.8"]]
   :main ^:skip-aot cookbook.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
