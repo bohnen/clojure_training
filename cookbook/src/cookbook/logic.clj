@@ -21,3 +21,16 @@
 
 (run* [q]
       (== {:a q :b 2} {:a 1 :b 2}))
+
+(run* [q]
+      (conde
+       [succeed]))
+
+(run* [q]
+      (conde
+       [(== q 1)]
+       [(== q 2)]))
+
+(run* [q]
+      (conde
+       [(== q 1) (== q 2)]))
